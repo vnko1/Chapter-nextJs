@@ -11,18 +11,18 @@ const raleway = Raleway({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: "Chapter application",
+  title: "Chapter",
   description: "Social about books",
 };
 
 export default function RootLayout({
-  children,
+  publicRoute,
 }: {
-  children: React.ReactNode;
+  publicRoute: React.ReactNode;
 }) {
   return (
     <html lang="en">
-      <body className={raleway.variable}>{children}</body>
+      <body className={raleway.variable}>{publicRoute}</body>
     </html>
   );
 }
