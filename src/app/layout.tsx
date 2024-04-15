@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
-import "@/styles";
+import "@/styles/index.scss";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -9,6 +9,7 @@ const raleway = Raleway({
   variable: "--font-raleway",
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: "Chapter application",
   description: "Social about books",
