@@ -1,4 +1,6 @@
 import React from "react";
+import { LinksEnum } from "@/types";
+import { AuthLink, Delimiter } from "@/components";
 import { BlockAuth } from "@/app/@publicRoute/auth/components";
 
 function RegisterPage() {
@@ -8,7 +10,15 @@ function RegisterPage() {
       showBottomText={true}
       typePageText="Create new account"
     >
-      <div>RegisetPage</div>
+      <div className="max-w-[327px] w-full mx-auto">
+        RegisetPage
+        <Delimiter />
+        <AuthLink
+          textMsg="Already have an account ?"
+          linkMsg="Log in"
+          link={LinksEnum.LOG_IN}
+        />
+      </div>
     </BlockAuth>
   );
 }
