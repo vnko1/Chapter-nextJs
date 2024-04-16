@@ -1,2 +1,3 @@
+export { default as clientApi } from "./api";
 export * from "./regex";
-export * from "./api/auth";
+export * from "./cookies";

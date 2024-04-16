@@ -1,25 +1,29 @@
 "use client";
 import { FC } from "react";
-import { Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { Form, Formik, FormikProps } from "formik";
+import { AxiosError } from "axios";
 
 import { PasswordField, TextField, UIButton } from "@/components";
 import { EndpointsEnum, LinksEnum } from "@/types";
-import { login } from "@/lib";
+import { clientApi, setCookies } from "@/utils";
+
 import { FormValues } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
 import styles from "./LoginForm.module.scss";
-import axios from "axios";
-import { fetchData } from "@/utils";
-
-const BASE_URL = process.env.VITE_API_BASE_URL;
 
 const LoginForm: FC = () => {
   const onHandleSubmit = async (
-    values: FormValues,
-    setErrors: FormikHelpers<FormValues>
+    values: FormValues
+    // setErrors: FormikHelpers<FormValues>
   ) => {
-    await login(values);
+    try {
+      const res = await clientApi.post(EndpointsEnum.LOGIN, values);
+      setCookies({ token: res.data.token }, { expires: 1 });
+    } catch (error) {
+      if (error instanceof AxiosError) console.log(error);
+    }
   };
+
   return (
     <div>
       <Formik

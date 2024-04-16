@@ -28,7 +28,6 @@ export default async function RootLayout({
 }) {
   const headersList = headers();
   const g = headersList.get("x-hello-from-middleware2");
-  console.log("🚀 ~ g:", g);
   return (
     <html lang="en">
       <body className={raleway.variable}>{publicRoute}</body>
