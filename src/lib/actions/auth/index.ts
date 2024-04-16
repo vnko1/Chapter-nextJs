@@ -1,13 +1,11 @@
 "use server";
+import { cookies } from "next/headers";
 
-import { fetchData } from "@/utils";
 import { EndpointsEnum } from "@/types";
+import api from "@/lib/api";
 
 export async function login(values: { email: string; password: string }) {
-  const data = await fetchData(EndpointsEnum.LOGIN, {
-    method: "POST",
-    body: JSON.stringify(values),
-  });
+  const { data } = await api.post(EndpointsEnum.LOGIN, values);
 
-  console.log("🚀 ~ login ~ data:", data.token);
+  cookies().set("token", data.token, { expires: data.tokenExpires });
 }
