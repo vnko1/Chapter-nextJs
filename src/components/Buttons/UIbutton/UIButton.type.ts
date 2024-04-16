@@ -1,5 +1,5 @@
+import { IconEnum } from "@/types";
 import { ButtonHTMLAttributes } from "react";
-import { IconEnum } from "../../Icon";
 
 export type ButtonColorType = "primary" | "secondary";
 export type ButtonVariantType = "outlined" | "contained" | "text";

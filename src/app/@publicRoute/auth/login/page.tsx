@@ -11,9 +11,9 @@ function LoginPage() {
         <LoginForm />
         <Delimiter />
         <AuthLink
-          textMsg="Already have an account ?"
-          linkMsg="Log in"
-          link={LinksEnum.LOG_IN}
+          textMsg="Don`t have an account ?"
+          linkMsg="Sign up"
+          link={LinksEnum.SIGN_UP}
         />
       </div>
     </BlockAuth>

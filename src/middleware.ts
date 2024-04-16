@@ -1,11 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function middleware(request: NextRequest) {
-  const cookie = request?.cookies.get("token")?.value;
-  console.log("🚀 ~ middleware ~ request:", cookie);
-  const response = NextResponse.next();
+export default async function middleware(request: NextRequest) {
+  request;
 
-  return response;
+  return NextResponse.next();
 }
-
-export default middleware;

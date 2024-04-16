@@ -1,18 +1,47 @@
 "use server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-
-import { fetchData } from "@/lib";
-import { EndpointsEnum } from "@/types";
 import { revalidatePath } from "next/cache";
+import { getIronSession } from "iron-session";
 
-export async function login(values: { email: string; password: string }) {
-  const data = await fetchData(EndpointsEnum.LOGIN, {
-    method: "POST",
-    body: JSON.stringify(values),
+import { SessionData } from "@/services";
+import { defaultSession, sessionOptions, sleep } from "@/services";
+import { CredType, IUser } from "@/types";
+
+export async function getSession(shouldSleep = true) {
+  const session = await getIronSession<SessionData>(cookies(), sessionOptions);
+
+  if (!session.isLoggedIn) {
+    session.isLoggedIn = defaultSession.isLoggedIn;
+    session.username = defaultSession.username;
+  }
+
+  if (shouldSleep) {
+    await sleep(250);
+  }
+
+  return session;
+}
+
+type LoginArgs = { user: IUser } & CredType;
+
+export async function handleLogin({ user, token, tokenExpires }: LoginArgs) {
+  cookies().set("token", token, {
+    expires: tokenExpires,
+    secure: true,
   });
 
-  cookies().set("token", data.token, { expires: data.tokenExpires });
+  const session = await getSession();
+  session.username = user.id;
+  session.isLoggedIn = true;
+  await session.save();
+
   revalidatePath("/", "layout");
   redirect("/");
+}
+
+export async function logout() {
+  const session = await getSession(false);
+  session.destroy();
+  revalidatePath("/", "layout");
 }

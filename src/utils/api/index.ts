@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 
 import { CredType, EndpointsEnum } from "@/types";
 import { deleteCookies, getCookies, setCookies } from "../cookies";
+import { logout } from "@/lib";
 
 const BASE_URL = "https://api-dev.chapter-web.com/api/v1/";
 
@@ -63,7 +64,8 @@ api.interceptors.response.use(
 
         return api.request(originalRequest);
       } catch (e) {
-        deleteCookies("token", "userId");
+        deleteCookies("token");
+        logout();
         return Promise.reject(error);
       }
     }

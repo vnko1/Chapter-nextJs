@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import "@/styles/index.scss";
 
-import { EndpointsEnum } from "@/types";
-import { fetchData } from "@/utils";
-import { headers } from "next/headers";
+import { getSession } from "@/lib";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -26,11 +24,13 @@ export default async function RootLayout({
   publicRoute: React.ReactNode;
   privateRoute: React.ReactNode;
 }) {
-  const headersList = headers();
-  const g = headersList.get("x-hello-from-middleware2");
+  const session = await getSession();
+
   return (
     <html lang="en">
-      <body className={raleway.variable}>{publicRoute}</body>
+      <body className={raleway.variable}>
+        {session.isLoggedIn ? privateRoute : publicRoute}
+      </body>
     </html>
   );
 }

@@ -1,26 +1,33 @@
 "use client";
 import { FC } from "react";
-import { Form, Formik, FormikProps } from "formik";
-import { AxiosError } from "axios";
+import { Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { PasswordField, TextField, UIButton } from "@/components";
 import { EndpointsEnum, LinksEnum } from "@/types";
-import { clientApi, setCookies } from "@/utils";
+import { clientApi } from "@/utils";
 
-import { FormValues } from "./LoginForm.type";
+import { FormValues, LoginResponse } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
 import styles from "./LoginForm.module.scss";
+import { handleLogin } from "@/lib";
 
 const LoginForm: FC = () => {
   const onHandleSubmit = async (
-    values: FormValues
-    // setErrors: FormikHelpers<FormValues>
+    values: FormValues,
+    { setErrors }: FormikHelpers<FormValues>
   ) => {
     try {
-      const res = await clientApi.post(EndpointsEnum.LOGIN, values);
-      setCookies({ token: res.data.token }, { expires: 1 });
+      const res: AxiosResponse<LoginResponse> = await clientApi.post(
+        EndpointsEnum.LOGIN,
+        values
+      );
+
+      handleLogin(res.data);
     } catch (error) {
-      if (error instanceof AxiosError) console.log(error);
+      if (error instanceof AxiosError) {
+        setErrors(error.response?.data.message);
+      }
     }
   };
 
