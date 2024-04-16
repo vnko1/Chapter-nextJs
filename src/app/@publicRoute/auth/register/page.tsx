@@ -2,6 +2,7 @@ import React from "react";
 import { LinksEnum } from "@/types";
 import { AuthLink, Delimiter } from "@/components";
 import { BlockAuth } from "@/app/@publicRoute/auth/components";
+import { RegisterForm } from "./components";
 
 function RegisterPage() {
   return (
@@ -11,7 +12,7 @@ function RegisterPage() {
       typePageText="Create new account"
     >
       <div className="max-w-[327px] w-full mx-auto">
-        RegisetPage
+        <RegisterForm />
         <Delimiter />
         <AuthLink
           textMsg="Already have an account ?"
