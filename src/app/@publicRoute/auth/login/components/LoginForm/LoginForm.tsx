@@ -9,6 +9,7 @@ import { FormValues } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
 import styles from "./LoginForm.module.scss";
 import axios from "axios";
+import { fetchData } from "@/utils";
 
 const BASE_URL = process.env.VITE_API_BASE_URL;
 
@@ -18,8 +19,6 @@ const LoginForm: FC = () => {
     setErrors: FormikHelpers<FormValues>
   ) => {
     await login(values);
-
-
   };
   return (
     <div>
