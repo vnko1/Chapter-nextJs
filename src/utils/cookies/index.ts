@@ -17,5 +17,5 @@ export const setCookies = (cookies: Cookie, options?: CookieOptions) =>
     Cookies.set(name, String(cookies[name]), options)
   );
 
-export const deleteCookie = (...args: string[]) =>
+export const deleteCookies = (...args: string[]) =>
   args.forEach((name) => Cookies.remove(name));
