@@ -2,7 +2,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
-import { fetchData } from "@/utils";
+import { fetchData } from "@/lib";
 import { EndpointsEnum } from "@/types";
 import { revalidatePath } from "next/cache";
 

@@ -4,7 +4,9 @@ import { cookies } from "next/headers";
 const BASE_URL = process.env.VITE_API_BASE_URL;
 
 export async function fetchData(url: string, params?: RequestInit) {
-  const token = cookies().get("token")?.value;
+  const cookiesList = cookies();
+  const token = cookiesList.get("token")?.value;
+
   const initParams = {
     headers: {
       "Content-Type": "application/json",

@@ -4,6 +4,7 @@ import "@/styles/index.scss";
 
 import { EndpointsEnum } from "@/types";
 import { fetchData } from "@/utils";
+import { headers } from "next/headers";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -25,19 +26,12 @@ export default async function RootLayout({
   publicRoute: React.ReactNode;
   privateRoute: React.ReactNode;
 }) {
-  const user = await fetchData(EndpointsEnum.PROFILE, { method: "get" });
-  console.log("🚀 ~ user:", user);
-  let userIsUnauthorized: boolean = user.message === "Unauthorized";
-
-  if (userIsUnauthorized) {
-    const user = await fetchData(EndpointsEnum.REFRESH, { method: "POST" });
-    console.log("🚀 ~ userIsUnauthorized user:", user);
-  }
+  const headersList = headers();
+  const g = headersList.get("x-hello-from-middleware2");
+  console.log("🚀 ~ g:", g);
   return (
     <html lang="en">
-      <body className={raleway.variable}>
-        {userIsUnauthorized ? publicRoute : privateRoute}
-      </body>
+      <body className={raleway.variable}>{publicRoute}</body>
     </html>
   );
 }
