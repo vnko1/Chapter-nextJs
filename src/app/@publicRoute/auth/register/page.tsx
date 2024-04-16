@@ -1,7 +1,16 @@
 import React from "react";
+import { BlockAuth } from "@/app/@publicRoute/auth/components";
 
-function RegisetPage() {
-  return <div>RegisetPage</div>;
+function RegisterPage() {
+  return (
+    <BlockAuth
+      heading="Sign up"
+      showBottomText={true}
+      typePageText="Create new account"
+    >
+      <div>RegisetPage</div>
+    </BlockAuth>
+  );
 }
 
-export default RegisetPage;
+export default RegisterPage;

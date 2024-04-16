@@ -11,7 +11,7 @@ const raleway = Raleway({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: "Chapter",
+  title: "Chapter app",
   description: "Social about books",
 };
 
