@@ -10,7 +10,7 @@ import { clientApi } from "@/utils";
 import { FormValues, LoginResponse } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
 import styles from "./LoginForm.module.scss";
-import { handleLogin } from "@/lib";
+import { login } from "@/lib";
 
 const LoginForm: FC = () => {
   const onHandleSubmit = async (
@@ -23,7 +23,7 @@ const LoginForm: FC = () => {
         values
       );
 
-      handleLogin(res.data);
+      login(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
         setErrors(error.response?.data.message);

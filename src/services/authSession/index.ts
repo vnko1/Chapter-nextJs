@@ -1,14 +1,16 @@
+import { IUser } from "@/types";
+import { defaultUserState } from "@/utils";
 import { SessionOptions } from "iron-session";
 
 const sessionPass = process.env.SESSION_PASS as string;
 
 export interface SessionData {
-  username: string | number;
+  user: IUser;
   isLoggedIn: boolean;
 }
 
 export const defaultSession: SessionData = {
-  username: "",
+  user: defaultUserState,
   isLoggedIn: false,
 };
 

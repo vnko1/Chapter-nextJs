@@ -13,7 +13,7 @@ export async function getSession(shouldSleep = true) {
 
   if (!session.isLoggedIn) {
     session.isLoggedIn = defaultSession.isLoggedIn;
-    session.username = defaultSession.username;
+    session.user = defaultSession.user;
   }
 
   if (shouldSleep) {
@@ -25,14 +25,14 @@ export async function getSession(shouldSleep = true) {
 
 type LoginArgs = { user: IUser } & CredType;
 
-export async function handleLogin({ user, token, tokenExpires }: LoginArgs) {
+export async function login({ user, token, tokenExpires }: LoginArgs) {
   cookies().set("token", token, {
     expires: tokenExpires,
     secure: true,
   });
 
   const session = await getSession();
-  session.username = user.id;
+  session.user = user;
   session.isLoggedIn = true;
   await session.save();
 
