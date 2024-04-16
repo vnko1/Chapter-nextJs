@@ -3,3 +3,4 @@ export { default as Icon } from "./Icon/Icon";
 export { default as UIButton } from "./Buttons/UIbutton/UIButton";
 export { default as Delimiter } from "./Delimiter/Delimiter";
 export { default as AuthLink } from "./AuthLink/AuthLink";
+export { TextField, PasswordField } from "./Fields";

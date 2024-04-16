@@ -1,7 +1,7 @@
 "use client";
 import { ChangeEvent, FC, useState } from "react";
 import Link from "next/link";
-import { useFormContext } from "react-hook-form";
+import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 import cn from "classnames";
 
 import { emojiRegex } from "@/utils";
@@ -30,12 +30,9 @@ const PasswordField: FC<PasswordFieldProps> = ({
   onChange,
   ...props
 }) => {
-  const { register, setValue, getFieldState, getValues } = useFormContext();
-  const { isTouched, error } = getFieldState(name);
-  const fieldValue = getValues(name);
-
+  const [field, meta] = useField(name);
   const [isVisiblePassword, setIsVisiblePassword] = useState<boolean>(false);
-
+  const { setFieldValue } = useFormikContext();
   const { passwordStrength, passwordValue, LENGTH_STRENGTH, onHandleChange } =
     usePasswordStrength();
 
@@ -45,10 +42,10 @@ const PasswordField: FC<PasswordFieldProps> = ({
     [TypePasswordStrength.STRONG]: passwordStrength === 3,
   });
 
-  const isErrorValidation = isTouched && error;
+  const isErrorValidation = meta.touched && meta.error;
 
   const validationClassname = cn({
-    [styles["text-field--success"]]: isTouched && !error,
+    [styles["text-field--success"]]: meta.touched && !meta.error,
     [styles["text-field--has-error"]]: isErrorValidation,
   });
 
@@ -56,7 +53,7 @@ const PasswordField: FC<PasswordFieldProps> = ({
     event.target.value = event.target.value
       .replace(" ", "")
       .replace(emojiRegex, "");
-    setValue(name, event.target.value);
+    setFieldValue(field.name, event.target.value);
     onHandleChange(event.target.value);
     onChange && onChange(event);
   };
@@ -66,8 +63,8 @@ const PasswordField: FC<PasswordFieldProps> = ({
       <label htmlFor={id} className={styles["text-field__label"]}>
         {label && <p className={styles["text-field__label-text"]}>{label}</p>}
         <div className={styles["text-field__holder"]}>
-          <input
-            {...register}
+          <Field
+            {...field}
             {...props}
             id={id}
             name={name}
@@ -78,7 +75,7 @@ const PasswordField: FC<PasswordFieldProps> = ({
             className={styles["text-field__input"]}
             onChange={onHandleChangeField}
           />
-          {fieldValue?.length ? (
+          {field.value?.length ? (
             <Icon
               icon={isVisiblePassword ? IconEnum.Eye : IconEnum.Eye_Off}
               size={18}
@@ -89,12 +86,16 @@ const PasswordField: FC<PasswordFieldProps> = ({
           ) : null}
         </div>
       </label>
-      {strength && !additionalLabel && fieldValue && !isTouched && (
+      {strength && !additionalLabel && meta.value && !meta.touched && (
         <p className={styles["text-field__requirements"]}>{strengthMessage}</p>
       )}
       <div className={styles["text-field__helper-box"]}>
         {isErrorValidation ? (
-          <p className={styles["text-field__error-message"]}>{error.message}</p>
+          <ErrorMessage
+            name={name || "Field invalid"}
+            component="p"
+            className={styles["text-field__error-message"]}
+          />
         ) : null}
         {helperLink ? (
           <Link
@@ -117,7 +118,7 @@ const PasswordField: FC<PasswordFieldProps> = ({
       </div>
       {strength &&
       passwordValue &&
-      fieldValue?.length &&
+      field.value?.length &&
       passwordStrength >= 0 ? (
         <div
           className={cn(

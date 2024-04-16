@@ -1,7 +1,7 @@
 "use client";
 import { FC, ChangeEvent } from "react";
 import Link from "next/link";
-import { useFormContext } from "react-hook-form";
+import { Field, ErrorMessage, useField, useFormikContext } from "formik";
 
 import cn from "classnames";
 
@@ -26,18 +26,18 @@ const TextField: FC<TextFieldProps> = ({
   onChange,
   ...props
 }) => {
-  const { register, setValue, getFieldState } = useFormContext();
-  const { isTouched, error } = getFieldState(name);
+  const [field, meta] = useField(name);
+  const { setFieldValue } = useFormikContext();
 
-  const isSuccessValidation = isTouched && !error;
-  const isErrorValidation = isTouched && error;
+  const isSuccessValidation = meta.touched && !meta.error;
+  const isErrorValidation = meta.touched && meta.error;
 
   const validationClassname = cn({
     "text-field--has-error": isErrorValidation,
   });
 
   const onHandleChangeField = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(name, event.target.value);
+    setFieldValue(field.name, event.target.value);
     onChange && onChange(event);
   };
 
@@ -46,12 +46,12 @@ const TextField: FC<TextFieldProps> = ({
       <label htmlFor={id} className="text-field__label">
         {label && <p className="text-field__label-text">{label}</p>}
         <div className="text-field__holder">
-          <input
-            {...props}
-            {...register}
+          <Field
+            {...field}
             id={id}
             data-automation={dataAutomation}
             type={type}
+            {...props}
             value={value}
             defaultValue={defaultValue}
             className={"text-field__input"}
@@ -64,7 +64,11 @@ const TextField: FC<TextFieldProps> = ({
       </label>
       <div className="text-field__helper-box">
         {isErrorValidation ? (
-          <p className="text-field__error-message">{error.message}</p>
+          <ErrorMessage
+            name={name || "Field invalid"}
+            component="p"
+            className="text-field__error-message"
+          />
         ) : null}
         {helperLink ? (
           <Link href={helperLink.href} className="text-field__helper-link">
@@ -83,5 +87,4 @@ const TextField: FC<TextFieldProps> = ({
     </div>
   );
 };
-
 export default TextField;
