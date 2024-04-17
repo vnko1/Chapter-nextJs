@@ -8,12 +8,14 @@ import { Logo } from "@/components";
 
 import styles from "./PublicHeader.module.scss";
 
-const PublicHeader: FC = () => {
+type Props = { isShow?: boolean };
+
+const PublicHeader: FC<Props> = ({ isShow = false }) => {
   const pathname = usePathname();
   return (
     <header className={styles["header"]}>
       <div className={styles["header__container"]}>
-        {pathname !== LinksEnum.HOME ? <Logo alt="chapter" /> : null}
+        {pathname !== LinksEnum.HOME || isShow ? <Logo alt="chapter" /> : null}
       </div>
     </header>
   );

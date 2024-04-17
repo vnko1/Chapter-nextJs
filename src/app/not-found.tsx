@@ -4,7 +4,7 @@ import styles from "./app.module.scss";
 export default function NotFound() {
   return (
     <>
-      <PublicHeader />
+      <PublicHeader isShow />
       <main>
         <section className={styles["error"]}>
           <div className={`${styles["container"]} ${styles["not-found"]}`}>

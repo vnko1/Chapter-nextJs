@@ -6,7 +6,7 @@ import styles from "./app.module.scss";
 function Error() {
   return (
     <>
-      <PublicHeader />
+      <PublicHeader isShow />
       <section className={styles["error"]}>
         <div className={`${styles["container"]} ${styles["error"]}`}>
           <h1 className={`${styles["error_title"]} ${styles["title"]}`}>
