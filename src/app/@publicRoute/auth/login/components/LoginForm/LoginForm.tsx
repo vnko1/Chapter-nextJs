@@ -22,11 +22,18 @@ const LoginForm: FC = () => {
         EndpointsEnum.LOGIN,
         values
       );
-
+      setErrors({
+        password: "Wrong email or password",
+      });
       login(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
-        setErrors(error.response?.data.message);
+        console.log(error);
+        if (error.response?.status === 422) {
+          setErrors({
+            password: "Wrong email or password",
+          });
+        }
       }
     }
   };
