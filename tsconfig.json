@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "@types/**/*.ts"
+    "@types/**/*.ts",
+    "src/app/@publicRoute/auth/register"
   ],
   "exclude": ["node_modules"]
 }

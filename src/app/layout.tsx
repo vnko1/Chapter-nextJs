@@ -11,11 +11,11 @@ const raleway = Raleway({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: "Chapter application",
+  title: "Chapter app",
   description: "Social about books",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
