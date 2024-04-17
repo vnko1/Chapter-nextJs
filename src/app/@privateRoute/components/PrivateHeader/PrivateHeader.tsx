@@ -1,7 +1,7 @@
 "use client";
 
 import { EndpointsEnum } from "@/types";
-import { clientApi } from "@/utils";
+import { clientApi } from "@/services";
 import React, { FC, useEffect } from "react";
 
 const PrivateHeader: FC = () => {

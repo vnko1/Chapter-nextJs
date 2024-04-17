@@ -9,3 +9,5 @@ export type FormValues = {
   email: string;
   hash: string;
 };
+
+export type OTPResponse = { id: number; email: string };

@@ -2,15 +2,16 @@
 
 import React, { FC, useState } from "react";
 import { Formik, Form, FormikHelpers } from "formik";
-import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { TextField, UIButton } from "@/components";
-import { EndpointsEnum } from "@/types";
-import { clientApi } from "@/utils";
+import { EndpointsEnum, LinksEnum } from "@/types";
+import { clientApi } from "@/services";
 
 import FormNotification from "../FormNotification/FormNotification";
 import { validationSchema } from "./validationSchema";
-import { FormValues } from "./RegisterForm.type";
+import { FormValues, OTPResponse } from "./RegisterForm.type";
 import styles from "./RegisterForm.module.scss";
 
 const initialValues: FormValues = {
@@ -19,6 +20,7 @@ const initialValues: FormValues = {
 };
 const RegisterForm: FC = () => {
   const [step, setStep] = useState(1);
+  const { replace } = useRouter();
   const isNextStep = step > 1;
 
   const handleEmail = async (email: string) =>
@@ -33,19 +35,32 @@ const RegisterForm: FC = () => {
 
   const onHandleSubmit = async (
     { email, hash }: FormValues,
-    { resetForm }: FormikHelpers<FormValues>
+    { resetForm, setFieldError }: FormikHelpers<FormValues>
   ) => {
     try {
       if (step === 1) {
         await handleEmail(email);
         setStep(2);
       } else {
-        await handleOtp(hash);
+        const { data }: AxiosResponse<OTPResponse> = await handleOtp(hash);
+        replace(LinksEnum.ACCOUNT_CREATION + "/" + data.id);
       }
       resetForm({ values: { email, hash } });
     } catch (error) {
       if (error instanceof AxiosError) {
-        console.log(error);
+        if (
+          error.response?.data.error ===
+          "This email has already been registered, but registration is not completed"
+        )
+          return setStep(2);
+
+        if (error.response?.data.error === "notFound")
+          console.log(error.response?.data);
+
+        setFieldError(
+          step === 1 ? "email" : "hash",
+          error.response?.data.error
+        );
       }
     }
   };

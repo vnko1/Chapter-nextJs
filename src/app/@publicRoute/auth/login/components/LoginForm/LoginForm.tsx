@@ -5,7 +5,7 @@ import { AxiosError, AxiosResponse } from "axios";
 
 import { PasswordField, TextField, UIButton } from "@/components";
 import { EndpointsEnum, LinksEnum } from "@/types";
-import { clientApi } from "@/utils";
+import { clientApi } from "@/services";
 import { login } from "@/lib";
 
 import { FormValues, LoginResponse } from "./LoginForm.type";
