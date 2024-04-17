@@ -9,7 +9,6 @@ async function ChapterLayout({
   privateRoute: React.ReactNode;
 }) {
   const session = await getSession();
-  console.log(session);
 
   const root = session.isLoggedIn ? privateRoute : publicRoute;
 
