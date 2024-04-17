@@ -16,7 +16,7 @@ export const defaultSession: SessionData = {
 export const sessionOptions: SessionOptions = {
   password: sessionPass,
   cookieName: "user",
-  ttl: 15 * 60,
+  // ttl: 15 * 60,
   cookieOptions: {
     secure: true,
   },
