@@ -1,5 +1,5 @@
 function Page() {
-  return null;
+  return <div>Acc Creation Page</div>;
 }
 
 export default Page;

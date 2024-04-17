@@ -1,7 +1,7 @@
 import React from "react";
 import { LinksEnum } from "@/types";
 import { AuthLink, Delimiter } from "@/components";
-import { BlockAuth } from "@/app/@publicRoute/auth/components";
+import { BlockAuth } from "../components";
 import { RegisterForm } from "./components";
 
 function RegisterPage() {

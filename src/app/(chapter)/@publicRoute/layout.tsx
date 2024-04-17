@@ -1,5 +1,5 @@
 import React from "react";
-import { PublicHeader } from "@/app/@publicRoute/components";
+import { PublicHeader } from "@/app/(chapter)/@publicRoute/components";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
   return (

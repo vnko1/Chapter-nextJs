@@ -1,4 +1,5 @@
-import { PublicHeader } from "./@publicRoute/components";
+import Link from "next/link";
+import { PublicHeader } from "./(chapter)/@publicRoute/components";
 import styles from "./app.module.scss";
 
 export default function NotFound() {
@@ -15,9 +16,9 @@ export default function NotFound() {
               Sorry, we couldn`t find the page you are looking for.
             </p>
             <div className={styles["error__button"]}>
-              <a className="button" href="/">
+              <Link className="button" href="/">
                 Go to home page
-              </a>
+              </Link>
             </div>
           </div>
         </section>
