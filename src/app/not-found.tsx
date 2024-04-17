@@ -7,7 +7,7 @@ export default function NotFound() {
       <PublicHeader />
       <main>
         <section className={styles["error"]}>
-          <div className={styles["container"]}>
+          <div className={`${styles["container"]} ${styles["not-found"]}`}>
             <h1 className={`${styles["error_title"]} ${styles["title"]}`}>
               Oh no! Page not found
             </h1>
