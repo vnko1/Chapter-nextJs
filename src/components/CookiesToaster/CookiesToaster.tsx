@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Image from "next/image";
 
 import { IconEnum } from "@/types";
@@ -7,16 +7,21 @@ import { Icon } from "@/components";
 import styles from "./CookiesToaster.module.scss";
 
 const CookiesToaster: FC = () => {
-  const [toasterHide, setToasterHide] = useState(
-    JSON.parse(localStorage.getItem("cookieAccept") || "false")
-  );
+  const [toasterHide, setToasterHide] = useState(true);
+
+  useEffect(() => {
+    setToasterHide(JSON.parse(localStorage.getItem("cookieAccept") || "false"));
+  }, []);
 
   const cookieAccept = () => {
-    localStorage.setItem("cookieAccept", JSON.stringify(true));
+    window.localStorage.setItem("cookieAccept", JSON.stringify(true));
+
     setToasterHide(true);
   };
+
+  if (toasterHide) return null;
   return (
-    <div hidden={toasterHide} className={styles["cookie-toaster__wrapper"]}>
+    <div className={styles["cookie-toaster__wrapper"]}>
       <div className={styles["info-block"]}>
         <h5 className={styles["info-block__title"]}>
           This website uses cookies
