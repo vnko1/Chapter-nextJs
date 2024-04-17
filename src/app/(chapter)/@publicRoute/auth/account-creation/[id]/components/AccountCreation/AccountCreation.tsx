@@ -30,6 +30,11 @@ const AccountCreation: FC<AccountCreationProps> = ({ id }) => {
   >(null);
   const [nickname, setNickname] = useState<string>("");
   const debouncedNickname = useDebounce(nickname, 500);
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    setEmail(getDataFromLS("email") || "");
+  }, []);
 
   useEffect(() => {
     if (debouncedNickname !== "") {
@@ -138,7 +143,7 @@ const AccountCreation: FC<AccountCreationProps> = ({ id }) => {
               id="email"
               name="email"
               type="email"
-              defaultValue={getDataFromLS("email") || ""}
+              defaultValue={email}
               className="invisible"
               aria-label="Email input field"
             />
