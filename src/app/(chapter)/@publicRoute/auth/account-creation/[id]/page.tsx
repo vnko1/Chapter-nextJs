@@ -1,15 +1,15 @@
 import React from "react";
 import { CookiesToaster } from "@/components";
 import { BlockAuth } from "../../components";
+import { AccountCreation } from "./components";
 
 function AccountCreationId({ params: { id } }: { params: { id: string } }) {
-  console.log(id);
   return (
     <>
       <BlockAuth heading="Create account">
-        <div>Create Account</div>
+        <AccountCreation id={id} />
       </BlockAuth>
-      ;
+
       <CookiesToaster />
     </>
   );
