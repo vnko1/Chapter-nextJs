@@ -26,13 +26,19 @@ export async function getSession(shouldSleep = true) {
 type LoginArgs = { user: IUser } & CredType;
 
 export async function login({ user, token, tokenExpires }: LoginArgs) {
+  const { id, nickName, email, avatarUrl } = user;
   cookies().set("token", token, {
     expires: tokenExpires,
     secure: true,
   });
 
   const session = await getSession();
-  session.user = user;
+  session.user = {
+    id,
+    nickName,
+    email,
+    avatarUrl,
+  };
   session.isLoggedIn = true;
   await session.save();
 

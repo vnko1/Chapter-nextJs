@@ -7,6 +7,8 @@ export interface IUser {
   firstName: string;
   lastName: string;
   avatarUrl: string;
+  location: string | null;
+  //
   userStatus: string | null;
   provider: string;
   socialId: number | string | null;
@@ -16,7 +18,6 @@ export interface IUser {
   photo?: string | null;
   role: IUserRole;
   status: IUserStatus;
-  location: string | null;
   myFollowersCount: number | null;
   myFollowingCount: number | null;
   userBooks: Array<IBook> | [];
