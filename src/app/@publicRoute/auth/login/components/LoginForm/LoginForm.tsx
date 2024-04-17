@@ -6,11 +6,11 @@ import { AxiosError, AxiosResponse } from "axios";
 import { PasswordField, TextField, UIButton } from "@/components";
 import { EndpointsEnum, LinksEnum } from "@/types";
 import { clientApi } from "@/utils";
+import { login } from "@/lib";
 
 import { FormValues, LoginResponse } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
 import styles from "./LoginForm.module.scss";
-import { login } from "@/lib";
 
 const LoginForm: FC = () => {
   const onHandleSubmit = async (

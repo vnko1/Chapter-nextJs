@@ -2,11 +2,15 @@
 
 import React, { FC, useState } from "react";
 import { Formik, Form, FormikHelpers } from "formik";
+import { AxiosError } from "axios";
 
 import { TextField, UIButton } from "@/components";
-import { FormValues } from "./RegisterForm.type";
-import { validationSchema } from "./validationSchema";
+import { EndpointsEnum } from "@/types";
+import { clientApi } from "@/utils";
+
 import FormNotification from "../FormNotification/FormNotification";
+import { validationSchema } from "./validationSchema";
+import { FormValues } from "./RegisterForm.type";
 import styles from "./RegisterForm.module.scss";
 
 const initialValues: FormValues = {
@@ -17,13 +21,33 @@ const RegisterForm: FC = () => {
   const [step, setStep] = useState(1);
   const isNextStep = step > 1;
 
-  const onHandleSubmit = (
+  const handleEmail = async (email: string) =>
+    await clientApi.post(EndpointsEnum.REGISTRATION, {
+      email,
+    });
+
+  const handleOtp = async (hash: string) =>
+    await clientApi.post(EndpointsEnum.CONFIRM, {
+      hash,
+    });
+
+  const onHandleSubmit = async (
     { email, hash }: FormValues,
     { resetForm }: FormikHelpers<FormValues>
   ) => {
-    console.log("🚀 ~ data:", { email, hash });
-    resetForm({ values: { email, hash } });
-    setStep(2);
+    try {
+      if (step === 1) {
+        await handleEmail(email);
+        setStep(2);
+      } else {
+        await handleOtp(hash);
+      }
+      resetForm({ values: { email, hash } });
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error);
+      }
+    }
   };
 
   return (
