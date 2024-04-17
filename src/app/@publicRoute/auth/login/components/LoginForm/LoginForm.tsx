@@ -15,19 +15,16 @@ import { login } from "@/lib";
 const LoginForm: FC = () => {
   const onHandleSubmit = async (
     values: FormValues,
-    { setErrors }: FormikHelpers<FormValues>
+    { setErrors, resetForm }: FormikHelpers<FormValues>
   ) => {
     try {
       const res: AxiosResponse<LoginResponse> = await clientApi.post(
         EndpointsEnum.LOGIN,
         values
       );
-      setErrors({
-        password: "Wrong email or password",
-      });
+      resetForm();
       login(res.data);
     } catch (error) {
-      console.log(error);
       if (error instanceof AxiosError) {
         if (error.response?.status === 422) {
           setErrors({
