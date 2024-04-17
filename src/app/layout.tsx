@@ -20,9 +20,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   publicRoute,
   privateRoute,
+  children,
 }: {
   publicRoute: React.ReactNode;
   privateRoute: React.ReactNode;
+  children: React.ReactNode;
 }) {
   const session = await getSession();
 
@@ -30,6 +32,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={raleway.variable}>
         {session.isLoggedIn ? privateRoute : publicRoute}
+        {children}
       </body>
     </html>
   );

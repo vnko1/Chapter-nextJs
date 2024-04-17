@@ -11,7 +11,7 @@ export type UIButtonProps = {
   color?: ButtonColorType;
   variant?: ButtonVariantType;
   size?: ButtonSizeType;
-  dataAutomation: "submitButton" | "resetButton" | "navigationButton" | string;
+  dataAutomation?: "submitButton" | "resetButton" | "navigationButton" | string;
   isLoading?: boolean;
   fullWidth?: boolean;
   icon?: IconEnum;
