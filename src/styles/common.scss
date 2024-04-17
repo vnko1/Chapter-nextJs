@@ -42,3 +42,7 @@
 .hide-element {
   @apply invisible absolute;
 }
+
+.button {
+  @apply rounded-md px-4-xs py-1-sm bg-[#F79400];
+}
