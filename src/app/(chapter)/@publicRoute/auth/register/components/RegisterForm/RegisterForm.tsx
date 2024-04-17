@@ -41,6 +41,7 @@ const RegisterForm: FC = () => {
     try {
       if (step === 1) {
         await handleEmail(email);
+        setDataToLS({ email });
         setStep(2);
       } else {
         const { data }: AxiosResponse<OTPResponse> = await handleOtp(hash);
@@ -52,9 +53,10 @@ const RegisterForm: FC = () => {
       if (error instanceof AxiosError) {
         if (
           error.response?.data.error ===
-          "This email has already been registered, but registration is not completed"
-        )
+          "This email has already been registered, but is not confirmed"
+        ) {
           return setStep(2);
+        }
 
         if (error.response?.data.error === "notFound") {
           const id = getDataFromLS("id");
