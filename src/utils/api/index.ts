@@ -46,7 +46,7 @@ api.interceptors.response.use(
     ) {
       error.config._isRetry = true;
       try {
-        let apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL;
+        let apiBaseUrl: string = import.meta.env.API_BASE_URL;
         if (apiBaseUrl[apiBaseUrl.length - 1] !== "/") {
           apiBaseUrl += "/";
         }

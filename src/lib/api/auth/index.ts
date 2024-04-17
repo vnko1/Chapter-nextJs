@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 
-const BASE_URL = process.env.VITE_API_BASE_URL;
+const BASE_URL = process.env.API_BASE_URL;
 
 export async function fetchData(url: string, params?: RequestInit) {
   const cookiesList = cookies();
