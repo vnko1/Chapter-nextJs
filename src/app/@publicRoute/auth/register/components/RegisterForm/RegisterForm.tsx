@@ -13,6 +13,7 @@ import FormNotification from "../FormNotification/FormNotification";
 import { validationSchema } from "./validationSchema";
 import { FormValues, OTPResponse } from "./RegisterForm.type";
 import styles from "./RegisterForm.module.scss";
+import { getDataFromLS, setDataToLS } from "@/utils";
 
 const initialValues: FormValues = {
   email: "",
@@ -43,6 +44,7 @@ const RegisterForm: FC = () => {
         setStep(2);
       } else {
         const { data }: AxiosResponse<OTPResponse> = await handleOtp(hash);
+        setDataToLS({ email: data.email, id: data.id });
         replace(LinksEnum.ACCOUNT_CREATION + "/" + data.id);
       }
       resetForm({ values: { email, hash } });
@@ -54,8 +56,11 @@ const RegisterForm: FC = () => {
         )
           return setStep(2);
 
-        if (error.response?.data.error === "notFound")
-          console.log(error.response?.data);
+        if (error.response?.data.error === "notFound") {
+          const id = getDataFromLS("id");
+          if (id) return replace(LinksEnum.ACCOUNT_CREATION + "/" + id);
+          else setFieldError("hash", "Something wrong!");
+        }
 
         setFieldError(
           step === 1 ? "email" : "hash",

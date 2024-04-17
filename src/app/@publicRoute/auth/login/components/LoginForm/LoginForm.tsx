@@ -3,10 +3,11 @@ import { FC } from "react";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { AxiosError, AxiosResponse } from "axios";
 
-import { PasswordField, TextField, UIButton } from "@/components";
 import { EndpointsEnum, LinksEnum } from "@/types";
+import { removeDataFromLS } from "@/utils";
 import { clientApi } from "@/services";
 import { login } from "@/lib";
+import { PasswordField, TextField, UIButton } from "@/components";
 
 import { FormValues, LoginResponse } from "./LoginForm.type";
 import validationSchema from "./validationSchema";
@@ -22,6 +23,7 @@ const LoginForm: FC = () => {
         EndpointsEnum.LOGIN,
         values
       );
+      removeDataFromLS("email", "id");
       resetForm();
       login(res.data);
     } catch (error) {
