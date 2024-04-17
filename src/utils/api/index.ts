@@ -1,9 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
-import { getSession, handleAuth, logout } from "@/lib";
+import { getParsedSession, handleAuth, logout } from "@/lib";
 import { CredType, EndpointsEnum } from "@/types";
-import { deleteCookies } from "../cookies";
-
 const BASE_URL = "https://api-dev.chapter-web.com/api/v1/";
 
 const api = axios.create({
@@ -17,7 +15,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const { token } = await getSession();
+    const { token } = await getParsedSession();
 
     if (token) config.headers.Authorization = "Bearer" + " " + token;
 
@@ -33,7 +31,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const { token } = await getSession();
+    const { token } = await getParsedSession();
 
     if (!token) return Promise.reject(error);
 
@@ -46,7 +44,7 @@ api.interceptors.response.use(
     ) {
       error.config._isRetry = true;
       try {
-        let apiBaseUrl: string = import.meta.env.API_BASE_URL;
+        let apiBaseUrl: string = import.meta.env.VITE_API_BASE_URL;
         if (apiBaseUrl[apiBaseUrl.length - 1] !== "/") {
           apiBaseUrl += "/";
         }
@@ -63,7 +61,6 @@ api.interceptors.response.use(
 
         return api.request(originalRequest);
       } catch (e) {
-        deleteCookies("token");
         logout();
         return Promise.reject(error);
       }

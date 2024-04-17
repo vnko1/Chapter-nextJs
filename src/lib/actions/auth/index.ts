@@ -6,6 +6,7 @@ import { getIronSession } from "iron-session";
 
 import { SessionData, defaultSession, sessionOptions, sleep } from "@/services";
 import { CredType, IUser } from "@/types";
+import { JSONParser } from "@/utils";
 
 export async function getSession(shouldSleep = true) {
   const session = await getIronSession<SessionData>(cookies(), sessionOptions);
@@ -20,6 +21,11 @@ export async function getSession(shouldSleep = true) {
   }
 
   return session;
+}
+
+export async function getParsedSession() {
+  const data = await getSession();
+  return JSONParser(data);
 }
 
 export async function handleAuth(token: string) {

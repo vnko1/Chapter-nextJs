@@ -7,8 +7,8 @@ import React, { FC, useEffect } from "react";
 const PrivateHeader: FC = () => {
   useEffect(() => {
     async function getMe() {
-      const response = await clientApi.get(EndpointsEnum.PROFILE);
-      console.log("🚀 ~ getMe ~ response:", response);
+      const res = await clientApi.get(EndpointsEnum.PROFILE);
+      console.log("🚀 ~ getMe ~ res:", res);
     }
 
     getMe();
