@@ -1,18 +1,11 @@
 import { IUser } from "@/types";
 import defaultAvatar from "@/assets/vectors/default-user-avatar.svg";
 
-export const defaultSessionUserState: Pick<
-  IUser,
-  "id" | "avatarUrl" | "email" | "nickName"
-> = {
+export const defaultUserState: IUser = {
   id: 0,
   nickName: "",
   email: "",
   avatarUrl: defaultAvatar,
-};
-
-export const defaultUserState: IUser = {
-  ...defaultSessionUserState,
   firstName: "",
   lastName: "",
   location: null,

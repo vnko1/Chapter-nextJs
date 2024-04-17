@@ -4,8 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getIronSession } from "iron-session";
 
-import { SessionData } from "@/services";
-import { defaultSession, sessionOptions, sleep } from "@/services";
+import { SessionData, defaultSession, sessionOptions, sleep } from "@/services";
 import { CredType, IUser } from "@/types";
 
 export async function getSession(shouldSleep = true) {
@@ -13,7 +12,7 @@ export async function getSession(shouldSleep = true) {
 
   if (!session.isLoggedIn) {
     session.isLoggedIn = defaultSession.isLoggedIn;
-    session.user = defaultSession.user;
+    session.token = defaultSession.token;
   }
 
   if (shouldSleep) {
@@ -23,25 +22,17 @@ export async function getSession(shouldSleep = true) {
   return session;
 }
 
-type LoginArgs = { user: IUser } & CredType;
-
-export async function login({ user, token, tokenExpires }: LoginArgs) {
-  const { id, nickName, email, avatarUrl } = user;
-  cookies().set("token", token, {
-    expires: tokenExpires,
-    secure: true,
-  });
-
-  const session = await getSession();
-  session.user = {
-    id,
-    nickName,
-    email,
-    avatarUrl,
-  };
+export async function handleAuth(token: string) {
+  const session = await getSession(true);
+  session.token = token;
   session.isLoggedIn = true;
   await session.save();
+}
 
+type LoginArgs = { user: IUser } & CredType;
+
+export async function login({ token }: LoginArgs) {
+  await handleAuth(token);
   revalidatePath("/", "layout");
   redirect("/");
 }

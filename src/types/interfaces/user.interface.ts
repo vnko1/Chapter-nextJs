@@ -8,7 +8,6 @@ export interface IUser {
   lastName: string;
   avatarUrl: string;
   location: string | null;
-  //
   userStatus: string | null;
   provider: string;
   socialId: number | string | null;

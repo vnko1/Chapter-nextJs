@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 
+import { getSession, handleAuth, logout } from "@/lib";
 import { CredType, EndpointsEnum } from "@/types";
-import { deleteCookies, getCookies, setCookies } from "../cookies";
-import { logout } from "@/lib";
+import { deleteCookies } from "../cookies";
 
 const BASE_URL = "https://api-dev.chapter-web.com/api/v1/";
 
@@ -17,7 +17,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const [token] = getCookies("token");
+    const { token } = await getSession();
 
     if (token) config.headers.Authorization = "Bearer" + " " + token;
 
@@ -33,7 +33,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    const token = getCookies("token");
+    const { token } = await getSession();
 
     if (!token) return Promise.reject(error);
 
@@ -51,7 +51,7 @@ api.interceptors.response.use(
           apiBaseUrl += "/";
         }
         const {
-          data: { token, tokenExpires },
+          data: { token },
         }: AxiosResponse<CredType> = await axios.post(
           apiBaseUrl + EndpointsEnum.REFRESH,
           null,
@@ -59,8 +59,7 @@ api.interceptors.response.use(
             withCredentials: true,
           }
         );
-
-        setCookies({ token }, { expires: tokenExpires });
+        await handleAuth(token);
 
         return api.request(originalRequest);
       } catch (e) {
