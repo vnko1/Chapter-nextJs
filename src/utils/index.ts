@@ -3,3 +3,4 @@ export * from "./cookies";
 export * from "./constants";
 export * from "./helpers";
 export * from "./localStorage";
+export * from "./callBacks";

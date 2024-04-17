@@ -1,0 +1,98 @@
+import { Dispatch, SetStateAction } from "react";
+import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
+import { AxiosError, AxiosResponse } from "axios";
+
+import { EndpointsEnum, SetErrorType } from "@/types";
+import { notificationsCB } from "@/utils";
+import { clientApi } from "..";
+
+class SocketApi {
+  private static instance: SocketApi;
+  private readonly url = process.env.SOCKET_BASE_URL as string;
+  private options: Partial<SocketOptions> & Partial<ManagerOptions> = {
+    reconnectionAttempts: 5,
+    autoConnect: false,
+  };
+  private socket: Socket | null = null;
+
+  constructor() {
+    if (!SocketApi.instance) {
+      SocketApi.instance = this;
+    }
+
+    return SocketApi.instance;
+  }
+
+  init(token: string) {
+    const { options, url } = this;
+
+    options.extraHeaders = { Authorization: token };
+
+    this.socket = io(url, options);
+  }
+
+  get socketInstance() {
+    return this.socket;
+  }
+
+  handleEvent<T, K>(
+    setData: Dispatch<SetStateAction<Array<T>>>,
+    setError?: SetErrorType
+  ) {
+    return async function (eventData: K) {
+      if (typeof eventData === "object")
+        return setData((state) => [
+          { ...(eventData as T), keyId: Date.now() },
+          ...state,
+        ]);
+
+      if (typeof eventData === "string") {
+        try {
+          const { data }: AxiosResponse<Array<T>> = await clientApi.get("");
+          setData(notificationsCB<T>(data, "keyId"));
+        } catch (e) {
+          if (e instanceof AxiosError) {
+            setError && setError(e);
+          }
+        }
+      }
+    };
+  }
+
+  handleData<T>(
+    setData: Dispatch<SetStateAction<Array<T>>>,
+    setError?: SetErrorType
+  ) {
+    return async function () {
+      try {
+        const { data }: AxiosResponse<Array<T>> = await clientApi.get(
+          EndpointsEnum.NOTA
+        );
+
+        setData(notificationsCB<T>(data, "id"));
+      } catch (e) {
+        if (e instanceof AxiosError) {
+          setError && setError(e);
+        }
+      }
+    };
+  }
+
+  connect(isAuth: boolean) {
+    if (isAuth) this.socket?.connect();
+  }
+
+  disconnect() {
+    this.socket?.disconnect();
+  }
+
+  addListener<T>(event: string, cb: (e: T) => void) {
+    this.socket?.on(event, cb);
+  }
+
+  removeListener<T>(event: string, cb: (e: T) => void) {
+    this.socket?.off(event, cb);
+  }
+}
+
+export default SocketApi;

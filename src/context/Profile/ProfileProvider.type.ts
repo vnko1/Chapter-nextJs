@@ -1,7 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { INotification, INots } from "@/src/types";
 
-import { PostRefType } from "@/src/types";
+import { PostRefType, INotification, INots } from "@/types";
 
 export interface IProfileProviderProps {
   children: ReactNode;

@@ -1,28 +1,30 @@
-import { FC, createRef, useEffect, useLayoutEffect, useState } from "react";
-import { AxiosError, AxiosResponse } from "axios";
+"use client";
+import { FC, createRef, useEffect, useState } from "react";
+import { AxiosResponse } from "axios";
 
-import { EndpointsEnum, api } from "@/src/axios";
-import { SocketApi } from "@/src/services";
-import { getTokenFromLC } from "@/src/utils";
-import { useErrorBoundary } from "@/src/hooks";
-import { useAppSelector } from "@/src/redux";
 import {
   INotification,
   INots,
   SocketEventsEnum,
   PostRefType,
-} from "@/src/types";
+  EndpointsEnum,
+  IUser,
+} from "@/types";
+import { SocketApi, clientApi } from "@/services";
 
-import { IProfileProviderProps } from "./ProfileProvider.type";
 import { ProfileContext } from "./hooks";
+import { IProfileProviderProps } from "./ProfileProvider.type";
+import { getParsedSession } from "@/lib";
 
 const socket = new SocketApi();
 
 const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
-  const setErrorBoundary = useErrorBoundary();
-  const isAuth = useAppSelector((state) => state.userSlice.isAuth);
+  const [isAuth, setIsAuth] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  console.log(user);
   const [isConnected, setIsConnected] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [userPostsList, setUserPostsList] = useState<Array<PostRefType>>([]);
   const [isLoad, setIsLoad] = useState(false);
 
@@ -53,7 +55,7 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
 
   const fetchUserPosts = async (currentPage: number) => {
     try {
-      const response = await api.get(
+      const response = await clientApi.get(
         `${EndpointsEnum.POSTS_BY_AUTHOR}?page=${currentPage}&limit=50`
       );
       setUserPostsList(response.data);
@@ -64,28 +66,46 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
     }
   };
 
-  useLayoutEffect(() => {
-    setIsLoading(true);
-    api
-      .get(EndpointsEnum.NOTA)
-      .then(({ data }: AxiosResponse<Array<INots>>) => setNotifications(data))
-      .catch((e) => {
-        if (e instanceof AxiosError) {
-          setErrorBoundary(e);
-        }
-      })
-      .finally(() => setIsLoading(false));
-  }, [setErrorBoundary]);
+  useEffect(() => {
+    async function getMe() {
+      const res: AxiosResponse<IUser> = await clientApi.get(
+        EndpointsEnum.PROFILE
+      );
+      setUser(res.data);
+    }
+
+    getMe();
+  }, []);
+
+  useEffect(() => {
+    getParsedSession().then((res) => {
+      setIsAuth(res.isLoggedIn);
+      setToken(res.token);
+    });
+  }, []);
+
+  // useLayoutEffect(() => {
+  //   setIsLoading(true);
+  //   clientApi
+  //     .get(EndpointsEnum.NOTA)
+  //     .then(({ data }: AxiosResponse<Array<INots>>) => setNotifications(data))
+  //     .catch((e) => {
+  //       if (e instanceof AxiosError) {
+  //         throw new Error(e.message);
+  //       }
+  //     })
+  //     .finally(() => setIsLoading(false));
+  // }, []);
 
   useEffect(() => {
     const onConnect = () => setIsConnected(true);
     const onError = (error: Error) => console.log(error);
     const onDisconnect = () => setIsConnected(false);
 
-    if (getTokenFromLC()) {
-      socket.init(getTokenFromLC() + "");
-      socket.connect(isAuth);
-    }
+    // if (token) {
+    //   socket.init(token);
+    //   socket.connect(isAuth);
+    // }
 
     socket.addListener("connect", onConnect);
     socket.addListener("connect_error", onError);
@@ -97,18 +117,12 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
       socket.removeListener("disconnect", onDisconnect);
       socket.disconnect();
     };
-  }, [isAuth]);
+  }, [isAuth, token]);
 
   useEffect(() => {
-    const onHandleSubscribe = socket.handleData<INots>(
-      setNotifications,
-      setErrorBoundary
-    );
+    const onHandleSubscribe = socket.handleData<INots>(setNotifications);
 
-    const onHandleNewPost = socket.handleData<INots>(
-      setNotifications,
-      setErrorBoundary
-    );
+    const onHandleNewPost = socket.handleData<INots>(setNotifications);
 
     if (isConnected) {
       socket.addListener<INots>(SocketEventsEnum.subscribe, onHandleSubscribe);
@@ -124,7 +138,7 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
 
       socket.removeListener<INots>(SocketEventsEnum.post, onHandleNewPost);
     };
-  }, [isConnected, setErrorBoundary]);
+  }, [isConnected]);
 
   useEffect(() => {
     setUnreadMessage(newNotifications.length);
@@ -142,6 +156,7 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
         setHeaderAddPostBtnIsDisabled,
         setUnreadMessage,
         setNotifications,
+
         page,
         setPage,
         fetchUserPosts,
