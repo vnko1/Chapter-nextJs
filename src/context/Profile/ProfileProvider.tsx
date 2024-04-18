@@ -1,6 +1,6 @@
 "use client";
 import { FC, useEffect, useState } from "react";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 import { EndpointsEnum, IUser } from "@/types";
 import { clientApi } from "@/services";
@@ -18,10 +18,16 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
 
   useEffect(() => {
     async function getMe() {
-      const res: AxiosResponse<IUser> = await clientApi.get(
-        EndpointsEnum.PROFILE
-      );
-      setUser(res.data);
+      try {
+        const res: AxiosResponse<IUser> = await clientApi.get(
+          EndpointsEnum.PROFILE
+        );
+        setUser(res.data);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.log("🚀 ~ getMe ~ error:", error);
+        }
+      }
     }
 
     getMe();
