@@ -8,8 +8,10 @@ export interface IProfileProviderProps {
 type SetBoolean = Dispatch<SetStateAction<boolean>>;
 
 export type ProfileContextType = {
-  headerAddPostBtnIsDisabled: boolean;
   setHeaderAddPostBtnIsDisabled: SetBoolean;
+  setAddPostModalIsOpen: SetBoolean;
+  addPostModalIsOpen: boolean;
+  headerAddPostBtnIsDisabled: boolean;
   token: string | null;
   isAuth: boolean;
   user: IUser | null;

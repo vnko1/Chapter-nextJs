@@ -15,6 +15,7 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [headerAddPostBtnIsDisabled, setHeaderAddPostBtnIsDisabled] =
     useState(false);
+  const [addPostModalIsOpen, setAddPostModalIsOpen] = useState(false);
 
   useEffect(() => {
     async function getMe() {
@@ -43,8 +44,10 @@ const ProfileProvider: FC<IProfileProviderProps> = ({ children }) => {
   return (
     <ProfileContext.Provider
       value={{
-        headerAddPostBtnIsDisabled,
+        setAddPostModalIsOpen,
         setHeaderAddPostBtnIsDisabled,
+        headerAddPostBtnIsDisabled,
+        addPostModalIsOpen,
         isAuth,
         token,
         user,
